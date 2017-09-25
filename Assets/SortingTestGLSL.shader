@@ -33,6 +33,16 @@ Shader "Unlit/SortingTest" { // defines the name of the shader
 				vec2(0.0, 0.0)
 			};*/
 
+			const vec4 quadCoordsAndTexCoords[6] = vec4[](
+				vec4(-1.0, -1.0, 0.0, 0.0),
+				vec4(1.0, 1.0, 1.0, 1.0),
+				vec4(1.0, -1.0, 1.0, 0.0),
+
+				vec4(-1.0, 1.0, 0.0, 1.0),
+				vec4(1.0, 1.0, 1.0, 1.0),
+				vec4(-1.0, -1.0, 0.0, 0.0)
+			);
+
 			const float inv6 = 1.0 / 6.0;
 			const float inv255 = 1.0 / 255.0;
 
@@ -75,16 +85,19 @@ Shader "Unlit/SortingTest" { // defines the name of the shader
 				float size = 0.002;//0.02;
 				vec2 quadSize = vec2(size, size * aspect);
 
-				bool bit = (quad_vertexID == 1u) || (quad_vertexID == 4u);
-				vec2 quadCoordsAndTexCoord = vec2(bit || (quad_vertexID == 2u), bit || (quad_vertexID == 3u));
+				//bool bit = (quad_vertexID == 1u) || (quad_vertexID == 4u);
+				//vec2 quadCoordsAndTexCoord = vec2(bit || (quad_vertexID == 2u), bit || (quad_vertexID == 3u));
 
-				vec2 deltaSize = (quadCoordsAndTexCoord * 2.0 - 1.0) * quadSize;
+				vec4 quadCoordsAndTexCoord = quadCoordsAndTexCoords[quad_vertexID];
+
+
+				vec2 deltaSize = quadCoordsAndTexCoord.xy * quadSize; //(quadCoordsAndTexCoord * 2.0 - 1.0) * quadSize;
 				//vec2 deltaSize = quadCoords[quad_vertexID] * quadSize;
 
 				gl_Position.xy += deltaSize;
 
 				//vs_TEXCOORD0 = quadTexCoords[quad_vertexID];
-				vs_TEXCOORD0 = quadCoordsAndTexCoord;
+				vs_TEXCOORD0 = quadCoordsAndTexCoord.zw;//quadCoordsAndTexCoord;
 			}
 
 			#endif
