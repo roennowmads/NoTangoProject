@@ -41,13 +41,8 @@ Shader "Unlit/SortingTest" { // defines the name of the shader
 
 			void main()
 			{
-				float vertId = float(gl_VertexID);
-				float quadId = vertId * inv6;
-
-				quadId = floor(quadId);
-
-				vertId = quadId * -6.0 + vertId;
-				uint quad_vertexID = uint(vertId);
+				int quadId = int(float(gl_VertexID) * inv6);
+				int quad_vertexID = -6 * quadId + gl_VertexID;
 
 				bvec4 bits = equal(ivec4(quad_vertexID), ivec4(1, 4, 2, 3));
 				bool bit = bits.x || bits.y;
@@ -58,7 +53,7 @@ Shader "Unlit/SortingTest" { // defines the name of the shader
 
 				vec2 deltaSize = (quadCoordsAndTexCoord * 2.0 - 1.0) * quadSize;
 
-				uint value = _IndicesValues_buf[uint(quadId)];
+				uint value = _IndicesValues_buf[quadId];
 
 				uint index = value >> 8u;
 				float colorValue = float(value & 255u) * inv255;
